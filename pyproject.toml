@@ -17,5 +17,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-tap-calendly = "tap_calendly.tap:TapCalendly.cli()"
+tap-calendly = "tap_calendly.tap:TapCalendly.cli"
 
