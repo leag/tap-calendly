@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "tap-calendly"
+version = "0.1.0"
+description = ""
+authors = ["Nolan McCafferty <nolanmccafferty@gmail.com>"]
+readme = "README.md"
+packages = [{include = "tap_calendly"}]
+
+[tool.poetry.dependencies]
+python = ">=3.7.1,<3.12"
+requests = "^2.31.0"
+singer-sdk = "^0.31.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+tap-calendly = "tap_calendly.tap:TapCalendly.cli"
+
