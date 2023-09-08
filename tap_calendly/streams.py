@@ -2,6 +2,7 @@
 from typing import Any, Dict, Optional, List
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
+import pendulum
 
 from tap_calendly.client import CalendlyStream
 
@@ -64,13 +65,23 @@ class EventsStream(CalendlyStream):
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         return {'event_id': parse_id(record['uri'])}
+    
+    @staticmethod
+    def convert_to_standard_format(date_str):
+        try:
+            date_obj = pendulum.parse(date_str)
+            return date_obj.format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ')
+        except ValueError:
+            return "Invalid date format"
 
     def get_url_params(
             self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['sort'] = 'start_time:asc'
-        params['min_start_time'] = self.config.get('start_date', None)
+        if self.config.get('start_date', None):
+            min_start_time = self.convert_to_standard_format(self.config['start_date'])
+            params['min_start_time'] = min_start_time
         # params['max_start_time'] = self.config.get('end_date', None)
         return params
 
